@@ -18,6 +18,7 @@
 		4C77C087294D05A4000CAC20 /* PersonRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C77C086294D05A4000CAC20 /* PersonRow.swift */; };
 		4C77C089294D1534000CAC20 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C77C088294D1534000CAC20 /* Network.swift */; };
 		4C77C08B2950BA9F000CAC20 /* PersonListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C77C08A2950BA9F000CAC20 /* PersonListViewModel.swift */; };
+		4C791DDC29ABF81100098438 /* GetPeopleRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C791DDB29ABF81100098438 /* GetPeopleRequest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +53,7 @@
 		4C77C086294D05A4000CAC20 /* PersonRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonRow.swift; sourceTree = "<group>"; };
 		4C77C088294D1534000CAC20 /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		4C77C08A2950BA9F000CAC20 /* PersonListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonListViewModel.swift; sourceTree = "<group>"; };
+		4C791DDB29ABF81100098438 /* GetPeopleRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPeopleRequest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -166,9 +168,18 @@
 		4C77C085294D0300000CAC20 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
+				4C791DDA29ABF7D700098438 /* Requests */,
 				4C77C088294D1534000CAC20 /* Network.swift */,
 			);
 			path = Networking;
+			sourceTree = "<group>";
+		};
+		4C791DDA29ABF7D700098438 /* Requests */ = {
+			isa = PBXGroup;
+			children = (
+				4C791DDB29ABF81100098438 /* GetPeopleRequest.swift */,
+			);
+			path = Requests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -306,6 +317,7 @@
 				4C77C087294D05A4000CAC20 /* PersonRow.swift in Sources */,
 				4C77C059294D00D2000CAC20 /* PersonList.swift in Sources */,
 				4C77C057294D00D2000CAC20 /* Mobile_Learning_ProgramApp.swift in Sources */,
+				4C791DDC29ABF81100098438 /* GetPeopleRequest.swift in Sources */,
 				4C77C08B2950BA9F000CAC20 /* PersonListViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

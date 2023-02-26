@@ -1,10 +1,3 @@
-//
-//  ContentView.swift
-//  Mobile Learning Program
-//
-//  Created by Andrew Ogren on 12/16/22.
-//
-
 import SwiftUI
 
 struct PersonList: View {
@@ -15,12 +8,12 @@ struct PersonList: View {
     }
 
     var body: some View {
-        List {
-            ForEach(viewModel.people, id: \.name) { person in
+        List(viewModel.people) { person in
                 PersonRow(person: person)
-            }
         }
         .onAppear {
+            // is onAppear the appropriate place to make this call?
+            // Does this scale? What if we have to make multiple calls?
             viewModel.fetchPeople()
         }
     }

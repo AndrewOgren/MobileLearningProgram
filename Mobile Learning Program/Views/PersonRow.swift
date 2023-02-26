@@ -1,10 +1,3 @@
-//
-//  PersonRow.swift
-//  Mobile Learning Program
-//
-//  Created by Andrew Ogren on 12/16/22.
-//
-
 import SwiftUI
 
 struct PersonRow: View {
@@ -22,12 +15,13 @@ struct PersonRow: View {
         }
     }
 
+    // Should the whole string be formed in a view model?
     private var nameText: Text {
-        Text("Name: ").bold() + Text("\(person.name)")
+        Text("Name: ").bold() + Text(person.name)
     }
 
     private var languageText: Text {
-        Text("Language: ").bold() + Text("\(person.language?.rawValue ?? "")")
+        Text("Language: ").bold() + Text(person.language?.rawValue ?? "")
     }
 }
 
