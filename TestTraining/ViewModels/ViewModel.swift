@@ -1,17 +1,15 @@
-//  Created by Bastien Falcou on 3/6/23.
-
 import Foundation
-import SwiftUI     // Question: Is that an anti-pattern?
+import SwiftUI
 
 final class ViewModel: ObservableViewModel {
-    typealias Event = ViewModel     // Question: Why did I need to declare this?
+    typealias Event = ViewModel
 
     struct State: Equatable {
-        static func == (lhs: ViewModel.State, rhs: ViewModel.State) -> Bool {     // Question: Do I need this?
+        static func == (lhs: ViewModel.State, rhs: ViewModel.State) -> Bool {
             return lhs.people?.hashValue == rhs.people?.hashValue
         }
 
-        let apiCallPath = "9e528b12fd1a45a7ff4e4691adcddf10/raw/5ec8ce76460e8f29c9b0f99f3bf3450b06696482/people.json"     // Question: Should constants be in 'State'?
+        let apiCallPath = "9e528b12fd1a45a7ff4e4691adcddf10/raw/5ec8ce76460e8f29c9b0f99f3bf3450b06696482/people.json"
         var apiClient: APIClient
         var people: [Person]?
         var error: Error?
@@ -21,6 +19,13 @@ final class ViewModel: ObservableViewModel {
 
     init(apiClient: APIClient) {
         state = State(apiClient: apiClient)
+    }
+    
+    func binding(person: Person) -> Binding<Person> {
+        Binding(
+            get: { person },
+            set: { self.updatePeople($0) }
+        )
     }
 
     func binding<Value>(_ keyPath: WritableKeyPath<State, Value>) -> Binding<Value> {
@@ -40,5 +45,12 @@ final class ViewModel: ObservableViewModel {
         } catch {
             self.state.error = error
         }
+    }
+    
+    private func updatePeople(_ person: Person) {
+        guard let index = state.people?.firstIndex(where: { $0.id == person.id })
+        else { return }
+        
+        state.people?[index] = person
     }
 }

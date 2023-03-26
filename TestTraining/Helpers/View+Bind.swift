@@ -1,5 +1,3 @@
-//  Created by Bastien Falcou on 3/6/23.
-
 import SwiftUI
 
 extension View {

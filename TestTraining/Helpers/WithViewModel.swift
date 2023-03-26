@@ -1,10 +1,3 @@
-//
-//  WithViewModel.swift
-//  TestTraining
-//
-//  Created by Bastien Falcou on 3/6/23.
-//
-
 import SwiftUI
 
 public struct WithViewModel<ViewModel: ViewModelProtocol, Content: View>: View {
