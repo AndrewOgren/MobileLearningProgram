@@ -37,13 +37,16 @@ final class ViewModel: ObservableViewModel {
 
     @MainActor
     func makeAPICallAsyncAwait() async {
-        do {
-            let people: People = try await self.state.apiClient.perform(request: .get,
-                                                                        path: self.state.apiCallPath,
-                                                                        properties: nil)
+        let response: Result<People, Error> = await self.state.apiClient.perform(
+            request: .get,
+            path: self.state.apiCallPath,
+            properties: nil
+        )
+        switch response {
+        case .success(let people):
             self.state.people = people.people
-        } catch {
-            self.state.error = error
+        case .failure(let error):
+            print(error.localizedDescription)
         }
     }
     

@@ -16,7 +16,7 @@ struct Person: Identifiable, Hashable, Decodable {
         name: String,
         language: String
     ) {
-        self.id = UUID()
+        self.id = id
         self.name = name
         self.language = language
     }

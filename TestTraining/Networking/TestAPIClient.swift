@@ -1,49 +1,53 @@
 import Foundation
 
 final class TestAPIClient: APIClient {
-    private let defaultSession = URLSession(configuration: .default)
+    private lazy var urlSession: URLSession =  {
+        let urlSessionConfiguration = URLSessionConfiguration.default
+        urlSessionConfiguration.urlCache = cache
+        return URLSession(configuration: urlSessionConfiguration)
+    }()
+        
+    private lazy var documentURL: URL = {
+        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+    }()
+    
+    private lazy var cache: URLCache = {
+        let cachesURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
+        let diskCacheURL = cachesURL.appendingPathComponent("NetworkCache")
+        let cache = URLCache(memoryCapacity: 100_000_000, diskCapacity: 1_000_000_000, directory: diskCacheURL)
+        return cache
+    }()
+
     let baseURL: URL
 
-    init(baseURL: URL) {
+    init(
+        baseURL: URL
+    ) {
         self.baseURL = baseURL
     }
 
-    func perform<T>(request: RequestType,
-                    path: String,
-                    properties: [String : Any]?,
-                    completion: @escaping (Result<T, Error>) -> Void) where T: Decodable {
-        func returnOnMainThread(error: Error) {
-            DispatchQueue.main.async {
-                completion(.failure(error))
-            }
+    func perform<T>(
+        request: RequestType,
+        path: String,
+        properties: [String : Any]?
+    ) async -> Result<T, Error> where T: Decodable {
+        let urlRequest = URLRequest(url: baseURL.appendingPathComponent(path), cachePolicy: .returnCacheDataElseLoad)
+        
+        guard let (data, response) = try? await urlSession.data(for: urlRequest) else {
+            return .failure(NetworkingError.noData)
         }
-        defaultSession.dataTask(with: baseURL.appendingPathComponent(path)) { data, response, error in
-            DispatchQueue.global(qos: .background).async {
-                if let error = error {
-                    returnOnMainThread(error: error)
-                    return
-                }
-                guard let data = data else {
-                    returnOnMainThread(error: NetworkingError.noData)
-                    return
-                }
-                do {
-                    let result = try JSONDecoder().decode(T.self, from: data)
-                    DispatchQueue.main.async {
-                        completion(.success(result))
-                    }
-                } catch {
-                    returnOnMainThread(error: error)
-                }
+        guard let httpResponse = response as? HTTPURLResponse,
+              httpResponse.statusCode == 200 else {
+            return .failure(NetworkingError.failureResponse)
+        }
+        do {
+            let result = try JSONDecoder().decode(T.self, from: data)
+            if self.cache.cachedResponse(for: urlRequest) == nil {
+                self.cache.storeCachedResponse(CachedURLResponse(response: response, data: data), for: urlRequest)
             }
-        }.resume()
-    }
-
-    func perform<T>(request: RequestType,
-                    path: String,
-                    properties: [String : Any]?) async throws -> T where T: Decodable {
-        let url = baseURL.appendingPathComponent(path)
-        let (data, _) = try await URLSession.shared.data(from: url)
-        return try JSONDecoder().decode(T.self, from: data)
+            return .success(result)
+        } catch {
+            return .failure(error)
+        }
     }
 }

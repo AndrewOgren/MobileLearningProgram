@@ -29,6 +29,9 @@ struct PersonView: View {
                 Button("Save", action: {
                     viewModel.save()
                 })
+                .alert(viewModel.error ?? "", isPresented: viewModel.binding(\.showingAlert)) {
+                    Button("OK", role: .cancel) { }
+                }
                 Spacer()
             }
             .padding(16)

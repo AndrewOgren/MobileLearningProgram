@@ -6,6 +6,8 @@ class PersonViewViewModel: ObservableViewModel {
     struct State: Equatable {
         var name: String
         var language: String
+        var error: String?
+        var showingAlert: Bool = false
         
         fileprivate var source: Person
         
@@ -28,6 +30,11 @@ class PersonViewViewModel: ObservableViewModel {
     }
     
     func save() {
+        guard !state.language.isEmpty && !(state.language.lowercased() == "python") else {
+            state.showingAlert = true
+            state.error = "Not allowed!"
+            return
+        }
         state.source = Person(id: source.id, name: state.name, language: state.language)
     }
     
